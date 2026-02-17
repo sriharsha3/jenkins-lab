@@ -1,19 +1,23 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'docker:24.0.5'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
 
     stages {
 
-        stage('Build') {
+        stage('Check Docker') {
             steps {
-                sh 'chmod +x app.sh'
-                sh './app.sh'
+                sh 'docker --version'
             }
         }
 
-        stage('Workspace Info') {
+        stage('Build Script') {
             steps {
-                sh 'pwd'
-                sh 'ls -lrth'
+                sh 'chmod +x app.sh'
+                sh './app.sh'
             }
         }
     }
